@@ -69,7 +69,10 @@ Each service is independently replaceable — the inference engine, vector datab
 
 **Requirements:** Docker, Docker Compose, 8 GB RAM (16 GB recommended).
 
-```bash
+``bash
+docker-compose ps
+curl http://localhost/api/health
+
 git clone https://github.com/kuldeepyadav001/serina.git
 cd serina
 
@@ -84,16 +87,13 @@ docker-compose up -d --build
 Open http://localhost
 
 Verify:
-
 Bash
-
 docker-compose ps
 curl http://localhost/api/health
+
 Model Swapping
 The language model is configuration-driven, not hardcoded. Change one value in .env and restart:
-
 Bash
-
 CHAT_MODEL=qwen2.5:1.5b   # lightweight
 CHAT_MODEL=qwen2.5:7b     # higher quality, needs more RAM
 The same configuration point allows swapping to any Ollama-compatible model without modifying application code.
