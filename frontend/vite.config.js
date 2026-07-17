@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-   server: {
+  server: {
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
@@ -15,5 +15,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
+  },
+  build: {
+    outDir: 'dist',
   },
 })
