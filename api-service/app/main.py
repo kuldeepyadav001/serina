@@ -5,6 +5,7 @@ import httpx
 from app.config import settings
 from app.models import HealthResponse
 from app.routers.chat import router as chat_router
+from app.routers.documents import router as doc_router
 
 app = FastAPI(
     title="DocuChat AI",
@@ -22,6 +23,7 @@ app.add_middleware(
 
 # Mount routers
 app.include_router(chat_router)
+app.include_router(doc_router)  # <--- Mounted document endpoints
 
 
 @app.get("/health", response_model=HealthResponse)

@@ -55,3 +55,17 @@ async def generate_chat_stream(messages: list[dict]):
                     chunk = json.loads(line)
                     if "response" in chunk:
                         yield chunk["response"]
+                        
+async def generate_embeddings(text: str) -> list[float]:
+    """Generates a 768-dimensional embedding vector for the given text."""
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            f"{settings.ollama_url}/api/embeddings",
+            json={
+                "model": settings.embedding_model,
+                "prompt": text,
+            },
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data["embedding"]                        
