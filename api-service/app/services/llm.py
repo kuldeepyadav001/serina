@@ -5,8 +5,8 @@
 from app.clients.ollama import generate_chat_response, generate_chat_stream
 
 SYSTEM_PROMPT = (
-    "You are DocuChat AI — a helpful, friendly, and natural conversational assistant. "
-    "Answer clearly and concisely. If you don't know something, say so honestly."
+    "You are Serina — a friendly, natural, and helpful AI assistant. "
+    "Answer clearly and conversationally. If you don't know something, say so honestly."
 )
 
 

@@ -2,17 +2,15 @@ function MessageBubble({ message }) {
   const isUser = message.role === "user"
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-5`}>
       <div
-        className={`max-w-[75%] px-4 py-3 rounded-2xl ${
+        className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
           isUser
-            ? "bg-blue-600 text-white rounded-br-sm"
-            : "bg-gray-700 text-gray-100 rounded-bl-sm"
+            ? "bg-blue-600 text-white rounded-br-md shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+            : "bg-[#1a1a24] text-gray-100 rounded-bl-md border border-[#1f1f2e]"
         }`}
       >
-        <p className="whitespace-pre-wrap text-sm leading-relaxed">
-          {message.content}
-        </p>
+        {message.content}
       </div>
     </div>
   )
