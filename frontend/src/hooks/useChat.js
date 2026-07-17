@@ -6,7 +6,7 @@ export function useChat() {
   const [sessionId, setSessionId] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const sendMessage = useCallback(async (text) => {
+  const sendMessage = useCallback(async (text, documentId) => {
     if (!text.trim() || isLoading) return
 
     const userMessage = { role: "user", content: text }
@@ -17,12 +17,19 @@ export function useChat() {
     setMessages(prev => [...prev, assistantMessage])
 
     try {
-      const result = await sendMessageStream(text, sessionId, (streamedText) => {
+      const result = await sendMessageStream(text, sessionId, documentId, (streamedText) => {
+        // Strip sources marker from displayed text
+        let displayText = streamedText
+        const sourcesIdx = displayText.indexOf("__SOURCES__")
+        if (sourcesIdx !== -1) {
+          displayText = displayText.substring(0, sourcesIdx).trim()
+        }
+
         setMessages(prev => {
           const updated = [...prev]
           updated[updated.length - 1] = {
             role: "assistant",
-            content: streamedText,
+            content: displayText,
           }
           return updated
         })
