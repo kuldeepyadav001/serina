@@ -4,11 +4,12 @@ import httpx
 
 from app.config import settings
 from app.models import HealthResponse
+from app.routers.chat import router as chat_router
 
 app = FastAPI(
     title="DocuChat AI",
     description="Conversational AI with PDF intelligence",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 app.add_middleware(
@@ -19,36 +20,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount routers
+app.include_router(chat_router)
+
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    # Check Ollama
     ollama_status = "unhealthy"
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{settings.ollama_url}/api/tags",
-                timeout=5.0
+                timeout=5.0,
             )
             if response.status_code == 200:
                 ollama_status = "healthy"
     except Exception:
         pass
 
-    # Check Qdrant
     qdrant_status = "unhealthy"
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{settings.qdrant_url}/healthz",
-                timeout=5.0
+                timeout=5.0,
             )
             if response.status_code == 200:
                 qdrant_status = "healthy"
     except Exception:
         pass
 
-    # Check Redis
     redis_status = "unhealthy"
     try:
         import redis
