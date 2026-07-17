@@ -1,4 +1,4 @@
-Markdown
+![CI](https://github.com/kuldeepyadav001/serina/actions/workflows/ci.yml/badge.svg)
 
 # Serina
 
