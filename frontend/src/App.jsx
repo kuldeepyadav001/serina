@@ -29,7 +29,7 @@ function App() {
           onClearDocument={clearDocument}
         />
         <div className="flex flex-col flex-1">
-          <ChatArea messages={messages} isLoading={isLoading} />
+          <ChatArea messages={messages} isLoading={isLoading} onSuggestionClick={handleSend} />
           <MessageInput onSend={handleSend} isLoading={isLoading} />
         </div>
       </div>

@@ -34,3 +34,56 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #3a3a4a;
 }
+
+
+.markdown-body p {
+  margin-bottom: 0.5rem;
+}
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+.markdown-body strong {
+  color: #fff;
+  font-weight: 600;
+}
+.markdown-body code {
+  background: #0a0a0f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #60a5fa;
+}
+.markdown-body pre {
+  background: #0a0a0f;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: #e5e7eb;
+}
+.markdown-body ul, .markdown-body ol {
+  margin-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.markdown-body ul {
+  list-style-type: disc;
+}
+.markdown-body ol {
+  list-style-type: decimal;
+}
+.markdown-body li {
+  margin-bottom: 0.25rem;
+}
+.markdown-body h1, .markdown-body h2, .markdown-body h3 {
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #fff;
+}
+.markdown-body a {
+  color: #60a5fa;
+  text-decoration: underline;
+}
