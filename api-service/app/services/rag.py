@@ -1,4 +1,4 @@
-from app.clients.ollama import generate_embeddings, generate_chat_response, generate_chat_stream
+from app.clients.ollama import generate_embeddings
 from app.clients.qdrant import qdrant_client
 from app.config import settings
 
