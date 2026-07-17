@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: docuchat-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - frontend
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: docuchat-frontend
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  api:
+    build: ./api-service
+    container_name: docuchat-api
+    expose:
+      - "8000"
+    env_file: .env
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - ollama
+      - qdrant
+      - redis
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: docuchat-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: docuchat-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: docuchat-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  qdrant_data:

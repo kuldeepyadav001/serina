@@ -1,0 +1,29 @@
+# Environment variables — never commit these
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Node / React
+node_modules/
+dist/
+.DS_Store
+
+# Uploaded files — we don't commit user uploads
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# Docker
+*.log
+
+# VS Code
+.vscode/
