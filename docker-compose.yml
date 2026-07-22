@@ -33,6 +33,7 @@ services:
       - ollama
       - qdrant
       - redis
+      - postgres
     restart: unless-stopped
 
   ollama:
@@ -62,7 +63,21 @@ services:
       - "6379:6379"
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
+  
+  postgres:
+    image: postgres:17-alpine
+    container_name: docuchat-postgres
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: unless-stopped
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
 
 volumes:
   ollama_data:
   qdrant_data:
+  postgres_data:

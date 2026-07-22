@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from app.models import ChatRequest, ChatResponse
+from app.models.api import ChatRequest, ChatResponse
 from app.services.session import get_or_create_session, add_message
 from app.services.llm import chat, chat_stream
 from app.services.rag import rag_chat, rag_chat_stream

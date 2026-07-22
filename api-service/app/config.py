@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     session_ttl: int = 3600
     max_history: int = 10
 
+# Postgres
+    postgres_url: str = "postgresql://serina:serina_password@postgres:5432/serina_db"
     class Config:
         env_file = ".env"
 

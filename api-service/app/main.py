@@ -1,18 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 import httpx
 
 from app.config import settings
-from app.models import HealthResponse
+from app.models.api import HealthResponse
 from app.routers.chat import router as chat_router
 from app.routers.documents import router as doc_router
+from app.clients.postgres import create_db_and_tables
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    create_db_and_tables()
+    yield
+    # Shutdown (nothing for now)
 
 app = FastAPI(
     title="DocuChat AI",
     description="Conversational AI with PDF intelligence",
     version="1.0.0",
+    lifespan=lifespan,
 )
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
