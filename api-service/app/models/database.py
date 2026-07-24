@@ -28,3 +28,14 @@ class Message(SQLModel, table=True):
     mode: str = "general"
     document_id: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    
+class Document(SQLModel, table=True):
+    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    filename: str
+    file_path: str
+    file_size: int
+    chunks_count: int =0
+    status: str = Field(default="processing")
+    error_message: Optional[str] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
