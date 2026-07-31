@@ -1,5 +1,4 @@
 #This exposes the /documents/upload endpoint, saves files locally, and manages the ingestion pipeline.
-
 import os
 import uuid
 from fastapi import APIRouter, UploadFile, File, HTTPException
@@ -7,10 +6,20 @@ from app.services.pdf_extractor import extract_text_from_pdf
 from app.services.chunker import split_text_into_chunks
 from app.services.embedder import embed_and_store_chunks
 from uuid import uuid4
+from uuid import UUID
+from app.clients.postgres import (
+    get_all_documents_from_db,
+    get_document_by_id,
+    delete_document_from_db,
+)
+from app.clients.qdrant import qdrant_client
+from qdrant_client.http import models as qdrant_models
 from app.clients.postgres import (
     create_document_in_db,
     update_document_status,
 )
+from app.config import settings
+
 router = APIRouter(prefix="/documents")
 
 UPLOAD_DIR = "/app/storage/uploads"
@@ -89,3 +98,56 @@ async def upload_document(file: UploadFile = File(...)):
 
         # Step 16: Return error
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {str(e)}")
+    
+    
+@router.get("")
+async def list_documents():
+    documents = get_all_documents_from_db()
+    return [
+        {
+            "id": str(doc.id),
+            "filename": doc.filename,
+            "file_size": doc.file_size,
+            "chunks_count": doc.chunks_count,
+            "status": doc.status,
+            "error_message": doc.error_message,
+            "created_at": doc.created_at.isoformat(),
+        }
+        for doc in documents
+    ]
+    
+@router.delete("/{document_id}")
+async def delete_document(document_id: UUID):
+    # 1. Fetch document
+    doc = get_document_by_id(document_id)
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # 2. Delete Qdrant chunks
+    try:
+        qdrant_client.delete(
+            collection_name=settings.collection_name,
+            points_selector=qdrant_models.FilterSelector(
+                filter=qdrant_models.Filter(
+                    must=[
+                        qdrant_models.FieldCondition(
+                            key="document_id",
+                            match=qdrant_models.MatchValue(value=str(document_id)),
+                        )
+                    ]
+                )
+            ),
+        )
+    except Exception as e:
+        print(f"Warning: Qdrant delete failed: {e}")
+    
+    # 3. Delete file from disk
+    try:
+        os.remove(doc.file_path)
+    except Exception as e:
+        print(f"Warning: File delete failed: {e}")
+    
+    # 4. Delete Postgres row
+    delete_document_from_db(document_id)
+    
+    return {"status": "deleted", "id": str(document_id)}

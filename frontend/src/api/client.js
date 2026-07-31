@@ -64,3 +64,17 @@ export async function uploadDocument(file) {
 
   return response.json()
 }
+  
+export async function listDocuments() {
+  const response = await fetch(`${API_BASE}/documents`)
+  if (!response.ok) throw new Error("Failed to fetch documents")
+  return response.json()
+}
+
+export async function deleteDocument(documentId) {
+  const response = await fetch(`${API_BASE}/documents/${documentId}`, {
+    method: "DELETE",
+  })
+  if (!response.ok) throw new Error("Failed to delete document")
+  return response.json()
+}

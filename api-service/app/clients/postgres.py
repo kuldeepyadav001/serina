@@ -120,3 +120,7 @@ def delete_document_from_db(document_id: UUID) -> bool:
         db.delete(doc)       
         db.commit()
         return True
+    
+def get_document_by_id(document_id: UUID) -> Document | None:
+    with Session(engine) as db:
+        return db.get(Document, document_id)    
